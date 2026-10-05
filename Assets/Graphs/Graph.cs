@@ -6,7 +6,7 @@ public class Graph
 {
     List<Edge> edges = new List<Edge>();
     List<Node> nodes = new List<Node>();
-    List<Node> pathList = new List<Node>();
+    public List<Node> pathList = new List<Node>();
 
     public Graph() { }
 
@@ -43,6 +43,7 @@ public class Graph
     public bool AStar(GameObject startId, GameObject endId)
     {
         Node start = FindNode(startId);
+        Node end = FindNode(endId);
 
         if (start == null || end == null)
         {
@@ -67,7 +68,7 @@ public class Graph
 
             if (thisNode.getId() == endId)
             {
-                //ReconstructPath(start, end);
+                ReconstructPath(start, end);
                 return true;
             }
 
@@ -109,6 +110,20 @@ public class Graph
         }
 
         return false;
+    }
+
+    public void ReconstructPath(Node startId, Node endId)
+    {
+        pathList.Clear();
+        pathList.Add(endId);
+
+        var p = endId.cameFrom;
+        while (p != startId && p != null)
+        {
+            pathList.Insert(0, p);
+            p = p.cameFrom;
+        }
+        pathList.Insert(0, startId);
     }
 
     float distance(Node a, Node b)
